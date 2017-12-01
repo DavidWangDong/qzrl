@@ -81,7 +81,7 @@ export default {
   },
   computed:{
   	getThing:function () {
-  		return this.currContent==''?['无动向']:this.currContent.split('#qzrl#');
+  		return this.currContent==''?['暂无公开报道']:this.currContent.split('#qzrl#');
   	}
   },
   mounted : function () {
@@ -131,8 +131,11 @@ export default {
   		var timeStr = time.split('-').join('/');
   		
   		var res = this.isInArray(timeStr);
-      
-  		if (!res.flag1){
+      if (!res.flag1){
+  			return;
+  		}
+  		if (!res.flag2){
+        this.currContent="暂无公开报道"
   			return;
   		}
   		
@@ -178,9 +181,10 @@ export default {
   		var tmpArr = this.dataList.contentList.map(function(val){
   			return val.day;
   		})
-  		var flag1 = $.inArray(time,tmpArr)>-1?true:false
+      var dis = new Date(time).getTime()<Date.now()
+  		var flag1 = $.inArray(time,tmpArr)>-1||dis?true:false
   		var index=$.inArray(time,tmpArr);
-  		return {flag1:flag1,flag2:flag1&&(!!this.dataList.contentList[index].content),index:index}
+  		return {flag1:flag1,flag2:index>-1&&(!!this.dataList.contentList[index].content),index:index}
   	},
   	// renderTd(){
   	// 	var tds = this.datepicker.find('tbody td');

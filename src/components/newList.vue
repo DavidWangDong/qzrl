@@ -33,8 +33,8 @@
               </p>
 
               <p class="p-no-text con" v-if = "content.content==''">无动向</p>
-              <p class="p-text con" v-else v-html="brFil(content.content)">
-                
+              <p class="p-text con" v-else v-for="(val,dex) in brFil(content.content)">
+                {{val}}
               </p>
           </li>
         </ul>
@@ -326,7 +326,9 @@ export default {
       $('.navBarBox').css({height:'0.69rem'});
     },
     brFil:function(str){
-      return str.split('#qzrl#').join('<br>')
+      var list = [];
+      list = str.split('#qzrl#');
+      return list;
     },
     openNav:function () {
       this.navOpen = true;
@@ -350,7 +352,6 @@ export default {
       var currDay = (tmpDay>=10?(tmpDay):('0'+tmpDay))+'日';
       var currMounth = (tmpMon+1>=10?(tmpMon+1):('0'+(tmpMon+1)))+'月';
       return currMounth+currDay;
-
     },
     getWeek:function(day){
       var timeObject = new Date(day);
