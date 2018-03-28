@@ -1,4 +1,7 @@
 <template>
+<div class="page">
+
+
   <div class="picer">
   	<div class="leader_dynamic clearfix">
             <div class="leader_avater">
@@ -16,12 +19,13 @@
     <div id="datepicker"></div>
     <div class="things">
     	<ul class="things_ul clearfix"> 
-	    	<li class="dynamic" v-for='(val,index) in getThing'> 
+	    	<li class="dynamic" v-for='(val,index) in dataList.contentList'> 
 	    		<span class="point"></span> 
-	    		<p class="dynamic_content">{{val}}</p> 
+	    		<p class="dynamic_content"><span class="date">{{val.day|days}}</span><br>{{val.content}}</p> 
 	    	</li>  
     	</ul>
     </div>
+  </div>
   </div>
 </template>
 
@@ -84,42 +88,73 @@ export default {
   		return this.currContent==''?['暂无公开报道']:this.currContent.split('#qzrl#');
   	}
   },
+  filters :{
+    days (str) {
+      if (!str){
+        return '';
+      }
+      const arr = str.split('/');
+      const sig = ['年','月','日']
+      let allstr = ''
+      arr.forEach((val,index)=>{
+        allstr+=(val+sig[index])
+      })
+      return allstr;
+    }
+  },
   mounted : function () {
   	var that = this;
-  	$.datepicker.regional['zh-CN'] = {  
-        closeText: '关闭',  
-        prevText: '<上月',  
-        nextText: '下月>',  
-        currentText: '今天',  
-        monthNames: ['一月','二月','三月','四月','五月','六月',  
-        '七月','八月','九月','十月','十一月','十二月'],  
-        monthNamesShort: ['一','二','三','四','五','六',  
-        '七','八','九','十','十一','十二'],  
-        dayNames: ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],   
-        dayNamesMin: ['日','一','二','三','四','五','六'],
-        dateFormat: 'yy-mm-dd',  
-        firstDay: 1,  
-        isRTL: false,  
-        showMonthAfterYear: true, 
-        showOtherMonths:true, 
-        onSelect:that.showText,
-        beforeShowDay:that.showDay,
-        onChangeMonthYear:that.getByY,
-        yearSuffix: '年'};  
-     $.datepicker.setDefaults($.datepicker.regional['zh-CN']);  
-	 $( "#datepicker" ).datepicker();
-	 this.datepicker=$( "#datepicker" );
+  // 	$.datepicker.regional['zh-CN'] = {  
+  //       closeText: '关闭',  
+  //       prevText: '<上月',  
+  //       nextText: '下月>',  
+  //       currentText: '今天',  
+  //       monthNames: ['一月','二月','三月','四月','五月','六月',  
+  //       '七月','八月','九月','十月','十一月','十二月'],  
+  //       monthNamesShort: ['一','二','三','四','五','六',  
+  //       '七','八','九','十','十一','十二'],  
+  //       dayNames: ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],   
+  //       dayNamesMin: ['日','一','二','三','四','五','六'],
+  //       dateFormat: 'yy-mm-dd',  
+  //       firstDay: 1,  
+  //       isRTL: false,  
+  //       showMonthAfterYear: true, 
+  //       showOtherMonths:true, 
+  //       onSelect:that.showText,
+  //       beforeShowDay:that.showDay,
+  //       onChangeMonthYear:that.getByY,
+  //       yearSuffix: '年'};  
+  //    $.datepicker.setDefaults($.datepicker.regional['zh-CN']);  
+	//  $( "#datepicker" ).datepicker();
+	//  this.datepicker=$( "#datepicker" );
+    // $.ajax({
+    //   url:'http://ahfensitong.com/qzrl/api.php?action=getRili',
+    //   data:{jsonp:1,pid:this.$route.params.id,month:new Date().getMonth()+1,year:new Date().getFullYear()},
+    //   type:'GET',
+    //   dataType:'jsonp',
+    //   success:function(val){
+    //     if (!!!val.errorno){
+    //       Object.keys(val.data).forEach(function(index){
+    //         that.dataList[index]=JSON.parse(JSON.stringify(val.data[index]))
+    //       })
+    //       that.datepicker.datepicker('refresh');
+    //       return;
+    //     }
+    //   }
+    // })
+
+
     $.ajax({
       url:'http://ahfensitong.com/qzrl/api.php?action=getRili',
-      data:{jsonp:1,pid:this.$route.params.id,month:new Date().getMonth()+1,year:new Date().getFullYear()},
+      data:{jsonp:1,pid:this.$route.params.id},
       type:'GET',
       dataType:'jsonp',
       success:function(val){
+
         if (!!!val.errorno){
           Object.keys(val.data).forEach(function(index){
             that.dataList[index]=JSON.parse(JSON.stringify(val.data[index]))
           })
-          that.datepicker.datepicker('refresh');
           return;
         }
       }
@@ -216,5 +251,8 @@ export default {
  }
  #datepicker{
  	width: 100%;
+ }
+ .date{
+   color:#999;
  }
 </style>

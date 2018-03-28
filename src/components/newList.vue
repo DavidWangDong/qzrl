@@ -22,7 +22,12 @@
             </div>
             <p class="title">{{item.title}}</p>
             <p class="name">{{item.name}}</p>
-            <router-link class="date-more" :to="{ name: 'datepicer', params: { id:item.pid-0-1}}"><i class="date-icon"></i></router-link>
+            <router-link class="date-more" :to="{ name: 'datepicer', params: { id:item.pid-0-1}}">
+              <i class="date-icon"></i>
+              <span class="more_word">
+                点击查看更多>>
+              </span>
+            </router-link>
         </div>
         <ul class="dayListBox">
           <li class="dayList" v-for="(content,index) in getCurrent(item.contentList)" @click="openShe($event,content,index1,index)" :ref='"li"+index1+index'>
@@ -404,6 +409,7 @@ export default {
 <style scoped>
   .list{
     width: 100%;
+    padding-bottom:3rem;
   }
   .listHead{
     width: 100%;
@@ -542,6 +548,8 @@ export default {
     right: 0;
     top: 50%;
     margin-top: -.5rem;
+    text-align: center;
+        
 }
 .date-more i.date-icon {
     display: inline-block;
@@ -550,6 +558,7 @@ export default {
     background-position: 0 0;
     width: 1rem;
     height: 1rem;
+    
 }
 .dayListBox {
     width: 6.4rem;
@@ -637,5 +646,9 @@ export default {
     height: .22rem;
     background: url(http://simg.sinajs.cn/products/news/items/2017/leading_daily_trends/img/up-5e863f.png);
     background-size: 100% 100%;
+}
+.more_word{
+  display: block;
+  color: #666;
 }
 </style>

@@ -17,6 +17,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   width: 6.4rem;
   margin: 0 auto;
+  height: 100%;
 }
 *{
   margin:0;
@@ -107,5 +108,9 @@ input, textarea, select, button, meter, progress {
 }
 .things{
   width: 5.9rem;
+}
+.page{
+  height:100%;
+  overflow-y: auto;
 }
 </style>
