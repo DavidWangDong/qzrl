@@ -19,10 +19,15 @@
     <div id="datepicker"></div>
     <div class="things">
     	<ul class="things_ul clearfix"> 
-	    	<li class="dynamic" v-for='(val,index) in dataList.contentList'> 
+	    	<!-- <li class="dynamic" v-for='(val,index) in dataList.contentList' :key="`data_${index}`"> 
 	    		<span class="point"></span> 
 	    		<p class="dynamic_content"><span class="date">{{val.day|days}}</span><br>{{val.content}}</p> 
-	    	</li>  
+	    	</li>   -->
+        <li class="dynamic" v-for='(val,index) in getThing' :key="`data_${index}`"> 
+ 	    		<span class="point"></span> 
+	    		<p class="dynamic_content">{{val}}</p> 
+	    		<p class="dynamic_content"><span class="date">{{val.day|days}}</span><br>{{val.content}}</p> 
+ 	    	</li>  
     	</ul>
     </div>
   </div>
@@ -35,22 +40,21 @@ export default {
   created:function(){
     
     var that=this;
-    // $.ajax({
-    //   url:'http://ahfensitong.com/qzrl/api.php?action=getRili',
-    //   data:{jsonp:1,pid:this.$route.params.id},
-    //   type:'GET',
-    //   dataType:'jsonp',
-    //   success:function(val){
+    $.ajax({
+      url:'http://ahfensitong.com/qzrl/api.php?action=getRili',
+      data:{jsonp:1,pid:this.$route.params.id},
+      type:'GET',
+      dataType:'jsonp',
+      success:function(val){
 
-    //     if (!!!val.errorno){
-    //       Object.keys(val.data).forEach(function(index){
-    //         that.dataList[index]=JSON.parse(JSON.stringify(val.data[index]))
-    //       })
-    //       console.log(that.dataList);
-    //       return;
-    //     }
-    //   }
-    // })
+        if (!!!val.errorno){
+          Object.keys(val.data).forEach(function(index){
+            that.dataList[index]=JSON.parse(JSON.stringify(val.data[index]))
+          })
+          return;
+        }
+      }
+    })
 
   },
   data () {
@@ -104,57 +108,42 @@ export default {
   },
   mounted : function () {
   	var that = this;
-  // 	$.datepicker.regional['zh-CN'] = {  
-  //       closeText: '关闭',  
-  //       prevText: '<上月',  
-  //       nextText: '下月>',  
-  //       currentText: '今天',  
-  //       monthNames: ['一月','二月','三月','四月','五月','六月',  
-  //       '七月','八月','九月','十月','十一月','十二月'],  
-  //       monthNamesShort: ['一','二','三','四','五','六',  
-  //       '七','八','九','十','十一','十二'],  
-  //       dayNames: ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],   
-  //       dayNamesMin: ['日','一','二','三','四','五','六'],
-  //       dateFormat: 'yy-mm-dd',  
-  //       firstDay: 1,  
-  //       isRTL: false,  
-  //       showMonthAfterYear: true, 
-  //       showOtherMonths:true, 
-  //       onSelect:that.showText,
-  //       beforeShowDay:that.showDay,
-  //       onChangeMonthYear:that.getByY,
-  //       yearSuffix: '年'};  
-  //    $.datepicker.setDefaults($.datepicker.regional['zh-CN']);  
-	//  $( "#datepicker" ).datepicker();
-	//  this.datepicker=$( "#datepicker" );
-    // $.ajax({
-    //   url:'http://ahfensitong.com/qzrl/api.php?action=getRili',
-    //   data:{jsonp:1,pid:this.$route.params.id,month:new Date().getMonth()+1,year:new Date().getFullYear()},
-    //   type:'GET',
-    //   dataType:'jsonp',
-    //   success:function(val){
-    //     if (!!!val.errorno){
-    //       Object.keys(val.data).forEach(function(index){
-    //         that.dataList[index]=JSON.parse(JSON.stringify(val.data[index]))
-    //       })
-    //       that.datepicker.datepicker('refresh');
-    //       return;
-    //     }
-    //   }
-    // })
-
-
+  	$.datepicker.regional['zh-CN'] = {
+        closeText: '关闭',  
+        prevText: '<上月',  
+        nextText: '下月>',  
+        currentText: '今天',  
+        monthNames: ['一月','二月','三月','四月','五月','六月',  
+        '七月','八月','九月','十月','十一月','十二月'],  
+        monthNamesShort: ['一','二','三','四','五','六',  
+        '七','八','九','十','十一','十二'],  
+        dayNames: ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],   
+        dayNamesMin: ['日','一','二','三','四','五','六'],
+        dateFormat: 'yy-mm-dd',  
+        firstDay: 1,  
+        isRTL: false,  
+        showMonthAfterYear: true, 
+        showOtherMonths:true, 
+        onSelect:that.showText,
+        beforeShowDay:that.showDay,
+        onChangeMonthYear:that.getByY,
+        yearSuffix: '年'};  
+   $.datepicker.setDefaults($.datepicker.regional['zh-CN']);  
+	 $( "#datepicker" ).datepicker();
+	 this.datepicker=$( "#datepicker" );
     $.ajax({
       url:'http://ahfensitong.com/qzrl/api.php?action=getRili',
-      data:{jsonp:1,pid:this.$route.params.id},
+      data:{jsonp:1,pid:this.$route.params.id,month:new Date().getMonth()+1,year:new Date().getFullYear()},
       type:'GET',
       dataType:'jsonp',
       success:function(val){
-
         if (!!!val.errorno){
+          let newData = val.data.contentList.map((val)=>val.content)
+          that.currContent = newData.join('#qzrl#')
           Object.keys(val.data).forEach(function(index){
             that.dataList[index]=JSON.parse(JSON.stringify(val.data[index]))
           })
+          that.datepicker.datepicker('refresh');
           return;
         }
       }
@@ -186,6 +175,8 @@ export default {
       success:function(val){
 
         if (!!!val.errorno){
+            let newData = val.data.contentList.map((val)=>val.content)
+          that.currContent = newData.join('#qzrl#')
           Object.keys(val.data).forEach(function(index){
             that.dataList[index]=JSON.parse(JSON.stringify(val.data[index]))
           })
@@ -221,25 +212,25 @@ export default {
   		var index=$.inArray(time,tmpArr);
   		return {flag1:flag1,flag2:index>-1&&(!!this.dataList.contentList[index].content),index:index}
   	},
-  	// renderTd(){
-  	// 	var tds = this.datepicker.find('tbody td');
-  	// 	var that = this;
-  	// 	tds.each(function(index,val){
-  	// 		if (!!!$(val).attr('data-year')){
-  	// 			return;
-  	// 		}
-  	// 		val.className='';
-  	// 		$(val).addClass('noneAfter');
-  	// 		var dayStr = $(val).attr('data-year')+'/'+($(val).attr('data-month')-0+1)+'/'+$(val).find('a').text();
-  	// 		that.dataList.data.forEach(function(item){
-  	// 			var day1 = new Date(item.date).getTime();
-  	// 			var day2 = new Date(dayStr).getTime();
-  	// 			if (day1 == day2){
-  	// 				$(val).removeClass('noneAfter')
-  	// 			}
-  	// 		})
-  	// 	})
-  	// }
+  	renderTd(){
+  		var tds = this.datepicker.find('tbody td');
+  		var that = this;
+  		tds.each(function(index,val){
+  			if (!!!$(val).attr('data-year')){
+  				return;
+  			}
+  			val.className='';
+  			$(val).addClass('noneAfter');
+  			var dayStr = $(val).attr('data-year')+'/'+($(val).attr('data-month')-0+1)+'/'+$(val).find('a').text();
+  			that.dataList.data.forEach(function(item){
+  				var day1 = new Date(item.date).getTime();
+  				var day2 = new Date(dayStr).getTime();
+  				if (day1 == day2){
+  					$(val).removeClass('noneAfter')
+  				}
+  			})
+  		})
+  	}
   }
 }
 </script>

@@ -10,12 +10,12 @@
               <button class="navCloseBtn pos_abs" @click="closeNav"></button>
             </div>
             <ul class="listOuter">
-                <li :class="['navItem',{active:getActiveCity(index)}]" v-for="(val,index) in cityList" @click="toItem(index)" ref="navli">{{val}}</li>
+                <li :class="['navItem',{active:getActiveCity(index)}]" v-for="(val,index) in cityList" @click="toItem(index)" ref="navli" :key="`nav_${index}`">{{val}}</li>
             </ul>
         </div>
     </div>
     <div class="contentListWrap">
-      <div class="contentItem" v-for="(item,index1) in dataList" ref="contentItem">
+      <div class="contentItem" v-for="(item,index1) in dataList" ref="contentItem" :key="`content_item_${index1}`">
         <div class="faceBox-all">
             <div class="faceBox">
                 <img :src="item.avatar">
@@ -30,7 +30,7 @@
             </router-link>
         </div>
         <ul class="dayListBox">
-          <li class="dayList" v-for="(content,index) in getCurrent(item.contentList)" @click="openShe($event,content,index1,index)" :ref='"li"+index1+index'>
+          <li class="dayList" v-for="(content,index) in getCurrent(item.contentList)" @click="openShe($event,content,index1,index)" :ref='"li"+index1+index' :key="`day_${index}`">
               <p class="p-top">
                   <em class="dayName" data-day="20171012">{{content.day}}</em>
                   <em class="weekName">{{content.weekDay}}</em>
@@ -38,7 +38,7 @@
               </p>
 
               <p class="p-no-text con" v-if = "content.content==''">无动向</p>
-              <p class="p-text con" v-else v-for="(val,dex) in brFil(content.content)">
+              <p class="p-text con" v-else v-for="(val,dex) in brFil(content.content)" :key="`detail_${dex}`">
                 {{val}}
               </p>
           </li>
@@ -295,7 +295,6 @@ export default {
     var timer  = null;
     var navFalg = false;
     var that = this;
-    console.log(this.dataList.length);
     $(document).on('scroll',function(e){
         if (!!!$('.navBarBox')[0]){
           return;
